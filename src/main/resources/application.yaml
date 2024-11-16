@@ -1,0 +1,51 @@
+spring:
+  application:
+    name: auth
+
+  cloud:
+    gateway:
+      routes:
+        - id: resource
+          uri: http://localhost:8082
+          predicates:
+            - Path=/resource
+          filters:
+            - TokenRelay=
+        - id: receipt-scan
+          uri: http://localhost:8082
+          predicates:
+            - Path=/receipt-scan/**
+          filters:
+            - StripPrefix=1
+            - TokenRelay=
+            - TokenLoggingFilter
+        - id: catalog
+          uri: http://localhost:8083
+          predicates:
+            - Path=/catalog/**
+          filters:
+            - StripPrefix=1
+            - TokenRelay=
+        - id: user
+          uri: http://localhost:8084
+          predicates:
+            - Path=/user/**
+          filters:
+            - StripPrefix=1
+            - TokenRelay=
+        - id: social
+          uri: http://localhost:8085
+          predicates:
+            - Path=/social/**
+          filters:
+            - StripPrefix=1
+            - TokenRelay=
+
+server:
+  port: 8086
+
+keycloak:
+  auth-server-url: http://localhost:8080
+  realm: nota-social
+  client-id: auth
+  client-secret: BC7nM7tMVKwPtKd7JXy1ytmNBkgiezCQ
